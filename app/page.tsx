@@ -1,66 +1,87 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 
-const orders = [
-  { id: 'SO-1081', customer: 'Sitara Fabric Mills Ltd.', city: 'Faisalabad', rolls: '40 Rolls', amount: 'Rs. 790,000' },
-  { id: 'SO-1082', customer: 'Nishat Textile', city: 'Lahore', rolls: '25 Rolls', amount: 'Rs. 450,000' },
-];
+export default function TexFlow() {
+  const [rows, setRows] = useState([
+    { desc: "", color: "", fabric: "", lot: "", rolls: "", recv: "", del: "" }
+  ]);
+  const [challanNo, setChallanNo] = useState("CH-001");
+  const [party, setParty] = useState("");
+  const [driver, setDriver] = useState("");
+  const [vehicle, setVehicle] = useState("");
 
-export default function Page(){
-  const [form, setForm] = useState({
-    custEn: 'Sitara Fabric Mills Ltd.',
-    custUr: 'ستارہ فیبرک ملز لمیٹڈ',
-    millEn: 'TexFlow Textile Mills Ltd.',
-    millUr: 'ٹیکس فلو ٹیکسٹائل ملز لمیٹڈ',
-    city: 'Faisalabad',
-    vehicle: 'FS-1234',
-    rolls: '40',
-    meters: '2000',
-  });
+  const addRow = () => setRows([...rows, { desc: "", color: "", fabric: "", lot: "", rolls: "", recv: "", del: "" }]);
+
+  const update = (i: number, key: string, val: string) => {
+    const newRows = [...rows];
+    (newRows[i] as any)[key] = val;
+    setRows(newRows);
+  };
 
   return (
-    <div style={{padding:20, fontFamily:'system-ui', background:'#f5f5f5', minHeight:'100vh'}}>
-      <div style={{maxWidth:1000, margin:'0 auto', background:'white', padding:20, borderRadius:12}}>
-        <h1 style={{fontSize:22, fontWeight:'bold'}}>TexFlow - Textile Challan (Sales Order to Challan)</h1>
-        
-        <div style={{display:'flex', gap:20, marginTop:20}}>
-          <div style={{width:'35%', border:'1px solid #ddd', padding:10, borderRadius:8}}>
-            <b>PENDING SALES ORDERS</b>
-            {orders.map(o=>(
-              <div key={o.id} onClick={()=>setForm({...form, custEn:o.customer, city:o.city})} style={{border:'1px solid #ccc', padding:8, marginTop:8, cursor:'pointer'}}>
-                {o.id}<br/>{o.customer}<br/>{o.rolls} - {o.amount}
-              </div>
-            ))}
-          </div>
+    <div className="bg-gray-100 min-h-screen p-2 md:p-4">
+      <div className="bg-white max-w-7xl mx-auto p-4 shadow">
 
-          <div style={{width:'65%'}}>
-            <label>Customer Name (English)</label>
-            <input value={form.custEn} onChange={e=>setForm({...form,custEn:e.target.value})} style={{width:'100%', border:'1px solid #ccc', padding:8, marginBottom:8}} />
-            
-            <label>Customer Name Urdu - کسٹمر کا نام اردو میں</label>
-            <input dir="rtl" value={form.custUr} onChange={e=>setForm({...form,custUr:e.target.value})} style={{width:'100%', border:'1px solid #ccc', padding:8, marginBottom:8, textAlign:'right'}} />
-            
-            <label>Your Mill Name (English)</label>
-            <input value={form.millEn} onChange={e=>setForm({...form,millEn:e.target.value})} style={{width:'100%', border:'1px solid #ccc', padding:8, marginBottom:8}} />
-            
-            <label>Company Name Urdu - مل کا نام اردو</label>
-            <input dir="rtl" value={form.millUr} onChange={e=>setForm({...form,millUr:e.target.value})} style={{width:'100%', border:'1px solid #ccc', padding:8, marginBottom:8, textAlign:'right'}} />
-
-            <button onClick={()=>window.print()} style={{background:'black', color:'white', padding:'10px 20px', borderRadius:6, marginTop:10}}>Print Challan (A4) - DC-9041</button>
-
-            <div style={{border:'2px solid black', padding:15, marginTop:20}}>
-              <h3 style={{textAlign:'center'}}><b>DELIVERY CHALLAN</b></h3>
-              From: {form.millEn} / <span dir="rtl">{form.millUr}</span><br/>
-              To: {form.custEn} / <span dir="rtl">{form.custUr}</span><br/>
-              City: {form.city} | Vehicle: {form.vehicle}<br/>
-              Rolls: {form.rolls} | Meters: {form.meters}<br/>
-              <div style={{display:'flex', justifyContent:'space-between', marginTop:40}}>
-                <span>Receiver Sign</span><span>Gate Pass</span><span>For {form.millEn}</span>
-              </div>
-            </div>
+        {/* HEADER */}
+        <div className="text-center border-2 border-black p-3">
+          <h1 className="text-2xl font-black">TEXFLOW TEXTILE</h1>
+          <p className="text-xs">Factory Address Karachi | 0300-XXXXXXX</p>
+          <div className="flex justify-center gap-2 mt-2 text-xs font-bold">
+            <span className="border border-black px-3 py-1">KACHA</span>
+            <span className="border border-black px-3 py-1">PAKKA</span>
+            <span className="border border-black px-3 py-1">GATE PASS</span>
           </div>
         </div>
+
+        {/* TOP DETAILS */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 border border-black border-t-0 p-3">
+          <div><label className="text-[10px] font-bold">CHALLAN NO</label><input value={challanNo} onChange={e=>setChallanNo(e.target.value)} className="w-full border border-black p-1 text-sm" /></div>
+          <div><label className="text-[10px] font-bold">DATE</label><input type="date" className="w-full border border-black p-1 text-sm" /></div>
+          <div><label className="text-[10px] font-bold">DRIVER NAME</label><input value={driver} onChange={e=>setDriver(e.target.value)} placeholder="Driver Name" className="w-full border border-black p-1 text-sm" /></div>
+          <div><label className="text-[10px] font-bold">VEHICLE NO</label><input value={vehicle} onChange={e=>setVehicle(e.target.value)} placeholder="e.g KHI-1234" className="w-full border border-black p-1 text-sm" /></div>
+          <div className="col-span-2 md:col-span-4"><label className="text-[10px] font-bold">PARTY / FACTORY NAME</label><input value={party} onChange={e=>setParty(e.target.value)} className="w-full border border-black p-1 text-sm" /></div>
+        </div>
+
+        {/* TABLE */}
+        <table className="w-full border-collapse border border-black mt-3 text-xs">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="border border-black p-1">S.No</th>
+              <th className="border border-black p-1">DESCRIPTION</th>
+              <th className="border border-black p-1">COLOR</th>
+              <th className="border border-black p-1">FABRIC</th>
+              <th className="border border-black p-1">LOT NO</th>
+              <th className="border border-black p-1">ROLLS</th>
+              <th className="border border-black p-1">RECV WT</th>
+              <th className="border border-black p-1">DEL WT</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <tr key={i}>
+                <td className="border border-black text-center">{i+1}</td>
+                <td className="border border-black"><input value={r.desc} onChange={e=>update(i,'desc',e.target.value)} className="w-full p-1 outline-none" /></td>
+                <td className="border border-black"><input value={r.color} onChange={e=>update(i,'color',e.target.value)} className="w-full p-1 outline-none" /></td>
+                <td className="border border-black"><input value={r.fabric} onChange={e=>update(i,'fabric',e.target.value)} className="w-full p-1 outline-none" /></td>
+                <td className="border border-black"><input value={r.lot} onChange={e=>update(i,'lot',e.target.value)} className="w-full p-1 outline-none" /></td>
+                <td className="border border-black"><input value={r.rolls} onChange={e=>update(i,'rolls',e.target.value)} className="w-full p-1 outline-none" /></td>
+                <td className="border border-black"><input value={r.recv} onChange={e=>update(i,'recv',e.target.value)} className="w-full p-1 outline-none" /></td>
+                <td className="border border-black"><input value={r.del} onChange={e=>update(i,'del',e.target.value)} className="w-full p-1 outline-none" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <button onClick={addRow} className="mt-2 bg-black text-white px-4 py-1 text-xs">+ ADD ROW</button>
+
+        <div className="grid grid-cols-3 gap-10 mt-16 text-center text-xs font-bold">
+          <div className="border-t border-black pt-1">Prepared By</div>
+          <div className="border-t border-black pt-1">Authority Sign</div>
+          <div className="border-t border-black pt-1">Receiver Sign</div>
+        </div>
+
+        <button onClick={()=>window.print()} className="w-full bg-green-600 text-white py-2 mt-6 font-bold print:hidden">PRINT / SAVE PDF</button>
       </div>
     </div>
-  )
+  );
 }
